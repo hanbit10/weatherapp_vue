@@ -10,14 +10,17 @@
       />
       <ul
         class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
-      ></ul>
-      <li
-        v-for="searchResult in mapboxSearchResults"
-        :key="searchResult.id"
-        class="py-2 cursor-pointer"
+        v-if="mapboxSearchResults"
       >
-        {{ searchResult.place_name }}
-      </li>
+        <li
+          v-for="searchResult in mapboxSearchResults"
+          :key="searchResult.id"
+          class="py-2 cursor-pointer"
+          @click="previewCity(searchResult)"
+        >
+          {{ searchResult.place_name }}
+        </li>
+      </ul>
     </div>
   </main>
 </template>
@@ -27,7 +30,7 @@ import { ref } from "vue";
 import axios from "axios";
 
 const mapboxAPIKey =
-  "pk.eyJ1IjoiY2hhbmJpdDEwIiwiYSI6ImNsc3ZoaGJubjFheHUyaXBnNDA3ZWJsbWYifQ.Kzh4XKHb_rB-LzGabuXAaA";
+  "pk.eyJ1Ijoiam9obmtvbWFybmlja2kiLCJhIjoiY2t5NjFzODZvMHJkaDJ1bWx6OGVieGxreSJ9.IpojdT3U3NENknF6_WhR2Q";
 const searchQuery = ref("");
 const queryTimeout = ref(null);
 const mapboxSearchResults = ref(null);
@@ -40,10 +43,12 @@ const getSearchResults = () => {
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place`
       );
       mapboxSearchResults.value = result.data.features;
-      console.log(mapboxSearchResults.value);
+
       return;
     }
     mapboxSearchResults.value = null;
   }, 300);
 };
 </script>
+
+<style lang="scss" scoped></style>
