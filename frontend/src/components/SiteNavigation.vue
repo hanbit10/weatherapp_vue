@@ -17,6 +17,7 @@
         <i
           class="fa-solid fa-plus text-2xl hove:text-weather-secondary duration-150 cursor-pointer"
           @click="addCity"
+          v-if="route.query.preview"
         ></i>
       </div>
       <BaseModal :modalActive="modalActive" @close-modal="toggleModal">
@@ -54,7 +55,7 @@
 </template>
 
 <script setup>
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 import { uid } from "uid";
 import BaseModal from "./BaseModal.vue";
