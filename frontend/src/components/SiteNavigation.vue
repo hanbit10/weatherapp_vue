@@ -62,12 +62,12 @@ import { uid } from "uid";
 import { ref } from "vue";
 import BaseModal from "./BaseModal.vue";
 
-const savedCities = ref([]);
+const saveCities = ref([]);
 const route = useRoute();
 const router = useRouter();
 const addCity = () => {
-  if (localStorage.getItem("savedCities")) {
-    savedCities.value = JSON.parse(localStorage.getItem("savedCities"));
+  if (localStorage.getItem("saveCities")) {
+    saveCities.value = JSON.parse(localStorage.getItem("saveCities"));
   }
 
   const locationObj = {
@@ -80,11 +80,12 @@ const addCity = () => {
     },
   };
 
-  savedCities.value.push(locationObj);
-  localStorage.setItem("savedCities", JSON.stringify(savedCities.value));
+  saveCities.value.push(locationObj);
+  localStorage.setItem("saveCities", JSON.stringify(saveCities.value));
 
   let query = Object.assign({}, route.query);
   delete query.preview;
+  query.id = locationObj.id;
   router.replace({ query });
 };
 

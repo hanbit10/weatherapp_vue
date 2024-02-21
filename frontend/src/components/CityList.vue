@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div v-for="city in savedCities" :key="city.id">
+    <div v-for="city in saveCities" :key="city.id">
       <CityCard :city="city" @click="goToCityView(city)" />
     </div>
 
-    <p v-if="savedCities.length === 0">
+    <p v-if="saveCities.length === 0">
       No locations added. To start tracking a location, search in the field
       above.
     </p>
@@ -17,14 +17,14 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import CityCard from "./CityCard.vue";
 
-const savedCities = ref([]);
+const saveCities = ref([]);
 const getCities = async () => {
-  if (localStorage.getItem("savedCities")) {
-    savedCities.value = JSON.parse(localStorage.getItem("savedCities"));
+  if (localStorage.getItem("saveCities")) {
+    saveCities.value = JSON.parse(localStorage.getItem("saveCities"));
 
     const requests = [];
 
-    savedCities.value.forEach((city) => {
+    saveCities.value.forEach((city) => {
       requests.push(
         axios.get(
           `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=7efa332cf48aeb9d2d391a51027f1a71`
@@ -34,8 +34,11 @@ const getCities = async () => {
 
     const weatherData = await Promise.all(requests);
 
+    //Flicker Delay
+    await new Promise((res) => setTimeout(res, 300));
+
     weatherData.forEach((value, index) => {
-      savedCities.value[index].weather = value.data;
+      saveCities.value[index].weather = value.data;
     });
   }
 };
@@ -47,6 +50,7 @@ const goToCityView = (city) => {
     name: "cityView",
     params: { state: city.state, city: city.city },
     query: {
+      id: city.id,
       lat: city.coords.lat,
       lng: city.coords.lng,
     },
